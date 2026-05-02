@@ -1,0 +1,65 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user of the system (Student, Teacher, Assistant, or Admin).",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "The unique ID from Firebase Auth." },
+        "email": { "type": "string", "format": "email", "description": "The user's email address." },
+        "displayName": { "type": "string", "description": "The user's display name." },
+        "role": { "type": "string", "enum": ["student", "teacher", "assistant", "admin"], "description": "The user's role in the system." },
+        "status": { "type": "string", "enum": ["active", "blocked"], "description": "Whether the user is active or blocked." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the user was created." }
+      },
+      "required": ["uid", "email", "role", "status"]
+    },
+    "Lab": {
+      "title": "Lab",
+      "description": "A computer lab facility.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique ID of the lab." },
+        "name": { "type": "string", "description": "The name of the lab (e.g., Lab A)." },
+        "description": { "type": "string", "description": "A brief description of the lab." },
+        "totalPCs": { "type": "number", "description": "The total number of PCs in the lab." },
+        "location": { "type": "string", "description": "The physical location of the lab." }
+      },
+      "required": ["id", "name", "totalPCs"]
+    },
+    "Computer": {
+      "title": "Computer",
+      "description": "A specific PC in a lab.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique ID of the computer." },
+        "labId": { "type": "string", "description": "The ID of the lab this computer belongs to." },
+        "pcNumber": { "type": "number", "description": "The number assigned to the PC (e.g., PC-01)." },
+        "status": { "type": "string", "enum": ["available", "occupied", "maintenance"], "description": "The current status of the PC." }
+      },
+      "required": ["id", "labId", "pcNumber", "status"]
+    },
+    "Booking": {
+      "title": "Booking",
+      "description": "A reservation for a computer.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "The unique ID of the booking." },
+        "userId": { "type": "string", "description": "The ID of the user who made the booking." },
+        "labId": { "type": "string", "description": "The ID of the lab." },
+        "computerId": { "type": "string", "description": "The ID of the computer booked." },
+        "startTime": { "type": "string", "format": "date-time", "description": "The start time of the booking." },
+        "endTime": { "type": "string", "format": "date-time", "description": "The end time of the booking." },
+        "status": { "type": "string", "enum": ["confirmed", "cancelled", "completed", "no-show"], "description": "The status of the booking." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When the booking was made." }
+      },
+      "required": ["id", "userId", "labId", "computerId", "startTime", "endTime", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": { "schema": "User", "description": "Stores user profiles." },
+    "/labs/{labId}": { "schema": "Lab", "description": "Stores lab information." },
+    "/labs/{labId}/computers/{computerId}": { "schema": "Computer", "description": "Stores computer information within a lab." },
+    "/bookings/{bookingId}": { "schema": "Booking", "description": "Stores all bookings." }
+  }
+}

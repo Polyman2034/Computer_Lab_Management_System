@@ -1,0 +1,159 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {uid}
+    // Fields:
+    //   - uid: string (required) - The unique ID from Firebase Auth.
+    //   - email: string (required) - The user's email address.
+    //   - displayName: string (optional) - The user's display name.
+    //   - role: string (required, enum: ['student', 'teacher', 'assistant', 'admin']) - The user's role.
+    //   - status: string (required, enum: ['active', 'blocked']) - Whether the user is active or blocked.
+    //   - createdAt: string (optional) - When the user was created.
+    //
+    // Collection: labs
+    // Document ID: {labId}
+    // Fields:
+    //   - id: string (required) - The unique ID of the lab.
+    //   - name: string (required) - The name of the lab.
+    //   - description: string (optional) - A brief description of the lab.
+    //   - totalPCs: number (required) - The total number of PCs in the lab.
+    //   - location: string (optional) - The physical location of the lab.
+    //
+    // Collection: labs/{labId}/computers
+    // Document ID: {computerId}
+    // Fields:
+    //   - id: string (required) - The unique ID of the computer.
+    //   - labId: string (required) - The ID of the lab.
+    //   - pcNumber: number (required) - The number assigned to the PC.
+    //   - status: string (required, enum: ['available', 'occupied', 'maintenance']) - The current status.
+    //
+    // Collection: bookings
+    // Document ID: {bookingId}
+    // Fields:
+    //   - id: string (required) - The unique ID of the booking.
+    //   - userId: string (required) - The ID of the user who made the booking.
+    //   - labId: string (required) - The ID of the lab.
+    //   - computerId: string (required) - The ID of the computer booked.
+    //   - startTime: string (required) - The start time of the booking.
+    //   - endTime: string (required) - The end time of the booking.
+    //   - status: string (required, enum: ['confirmed', 'cancelled', 'completed', 'no-show']) - The status.
+    //   - createdAt: string (optional) - When the booking was made.
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "saiprasadkawdikar25@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isAssistant() {
+      return isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'assistant';
+    }
+
+    function isTeacher() {
+      return isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'teacher';
+    }
+
+    function isStaff() {
+      return isAdmin() || isAssistant() || isTeacher();
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidUser(data) {
+      return hasOnlyAllowedFields(['uid', 'email', 'displayName', 'role', 'status', 'createdAt']) &&
+             data.uid is string && data.uid.size() > 0 &&
+             data.email is string && isValidEmail(data.email) &&
+             data.role in ['student', 'teacher', 'assistant', 'admin'] &&
+             data.status in ['active', 'blocked'];
+    }
+
+    function isValidLab(data) {
+      return hasOnlyAllowedFields(['id', 'name', 'description', 'totalPCs', 'location']) &&
+             data.id is string && data.name is string && data.totalPCs is number;
+    }
+
+    function isValidComputer(data) {
+      return hasOnlyAllowedFields(['id', 'labId', 'pcNumber', 'status']) &&
+             data.id is string && data.labId is string && data.pcNumber is number &&
+             data.status in ['available', 'occupied', 'maintenance'];
+    }
+
+    function isValidBooking(data) {
+      return hasOnlyAllowedFields(['id', 'userId', 'labId', 'computerId', 'startTime', 'endTime', 'status', 'createdAt']) &&
+             data.userId is string && data.labId is string && data.computerId is string &&
+             data.startTime is string && data.endTime is string &&
+             data.status in ['confirmed', 'cancelled', 'completed', 'no-show'];
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isValidUser(request.resource.data) && 
+                    (isOwner(userId) && request.resource.data.role == 'student' || isAdmin());
+      allow update: if isAuthenticated() && isValidUser(request.resource.data) && 
+                    (isOwner(userId) && request.resource.data.role == resource.data.role && request.resource.data.status == resource.data.status || isAdmin());
+    }
+
+    match /labs/{labId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+
+      match /computers/{computerId} {
+        allow read: if isAuthenticated();
+        allow update: if isAuthenticated() && (isStaff() || (resource.data.status == 'available' && request.resource.data.status == 'occupied') || (resource.data.status == 'occupied' && request.resource.data.status == 'available'));
+        allow write: if isStaff();
+      }
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && isValidBooking(request.resource.data) && 
+                    (request.resource.data.userId == request.auth.uid || isStaff());
+      allow update: if isAuthenticated() && 
+                    (resource.data.userId == request.auth.uid || isStaff()) &&
+                    (request.resource.data.status in ['confirmed', 'cancelled', 'completed', 'no-show']);
+      allow delete: if isStaff();
+    }
+
+    match /timetable/{entryId} {
+      allow read: if isAuthenticated();
+      allow write: if isStaff();
+    }
+  }
+}

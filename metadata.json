@@ -1,0 +1,5 @@
+{
+  "name": "LabFlow: Computer Lab Management System",
+  "description": "A comprehensive system for managing computer lab resources, bookings, and usage analytics.",
+  "requestFramePermissions": []
+}
