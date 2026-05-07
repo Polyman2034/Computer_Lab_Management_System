@@ -20,6 +20,6 @@ View your app in AI Studio: https://ai.studio/apps/9ddf3b53-989a-4c68-a196-a4a73
 3. Run the app:
    `npm run dev`
 =======
-# Computer_Lab_Manager
-Problem Statement : Students who do not have personal computers / laptops face difficulty accessing lab system due to overlapping of practical lectures and no lab availability, which cause confusion and loss of productive time.
->>>>>>> d1a178c2adde095f934ea9153846bf9e9129c3ae
+
+
+https://computer-lab-management-system.vercel.app
