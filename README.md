@@ -1,10 +1,15 @@
 # 💻 Computer Lab Management System
 
-> A modern web-based Computer Lab Management System designed to simplify and automate day-to-day laboratory operations, including student management, lab scheduling, computer allocation, and resource monitoring.
+<p align="center">
+  <strong>A modern web application for managing computer laboratories, students, schedules, and computer availability.</strong>
+</p>
 
 <p align="center">
-  <a href="https://computer-lab-management-system.vercel.app">
-    <img src="https://img.shields.io/badge/🚀%20Live%20Demo-Visit%20Project-blue?style=for-the-badge" alt="Live Demo">
+  <a href="https://computer-lab-management-system.vercel.app/">
+    <img src="https://img.shields.io/badge/🚀%20Live%20Demo-Open%20Application-2563EB?style=for-the-badge" alt="Live Demo">
+  </a>
+  <a href="https://github.com/Polyman2034/Computer_Lab_Management_System">
+    <img src="https://img.shields.io/badge/GitHub-Source%20Code-181717?style=for-the-badge&logo=github" alt="GitHub Repository">
   </a>
 </p>
 
@@ -12,159 +17,49 @@
 
 ## 🌐 Live Demo
 
-🚀 **Try the application live:**
+🚀 **Access the deployed application:**
 
-👉 https://computer-lab-management-system.vercel.app
-
----
-
-## 📌 Project Overview
-
-Managing computer laboratories manually can become difficult when dealing with a large number of students, computers, schedules, and laboratory resources.
-
-The **Computer Lab Management System** provides a centralized digital platform to manage these operations efficiently.
-
-The system is designed to help administrators and lab staff:
-
-- 👨‍🎓 Manage student information
-- 🖥️ Manage computer resources
-- 📅 Organize laboratory schedules
-- 🎯 Allocate computers efficiently
-- 📊 Monitor laboratory resources
-- 🔄 Reduce manual administrative work
-- ⚡ Improve overall laboratory management
-
-The goal is to provide a **simple, modern, and efficient interface** for managing computer laboratory operations.
+### 👉 [Open Computer Lab Management System](https://computer-lab-management-system.vercel.app/)
 
 ---
 
-# 🎯 Objectives
+## 📌 About the Project
 
-The primary objectives of this project are:
+The **Computer Lab Management System** is a web-based application designed to simplify and organize computer laboratory operations.
 
-1. **Digitize laboratory management**
-   - Replace manual records and spreadsheets with a centralized system.
+Students who do not have personal computers or laptops can face difficulties accessing laboratory systems because of overlapping practical lectures, limited lab availability, and a lack of centralized information. These problems can create confusion and lead to loss of productive time.
 
-2. **Improve resource allocation**
-   - Efficiently manage and allocate available computers.
-
-3. **Simplify scheduling**
-   - Organize lab sessions and avoid scheduling confusion.
-
-4. **Centralize student information**
-   - Maintain student records in one place.
-
-5. **Improve administrative efficiency**
-   - Reduce repetitive manual tasks.
-
-6. **Provide better visibility**
-   - Allow administrators to quickly understand lab usage and resource availability.
+This project provides a centralized digital platform to make laboratory management more organized, accessible, and efficient.
 
 ---
 
-# ✨ Key Features
+## 🎯 Problem Statement
 
-## 👨‍🎓 Student Management
+> Students who do not have personal computers / laptops face difficulty accessing lab systems due to overlapping practical lectures and lack of lab availability, which causes confusion and loss of productive time.
 
-Manage student information from a centralized interface.
+The system addresses this problem by providing a structured platform for managing:
 
-### Features
-
-- Add students
-- View student information
-- Update student records
-- Manage student details
-- Search and manage students efficiently
+- 👨‍🎓 Students
+- 🖥️ Computer systems
+- 📅 Laboratory schedules
+- 🎯 Computer allocation
+- 📊 Laboratory resources
 
 ---
 
-## 🖥️ Computer Management
+## 💡 Proposed Solution
 
-Keep track of computers available inside the laboratory.
+The system digitizes important laboratory management activities and provides a centralized interface for managing laboratory resources.
 
-### Features
-
-- Computer inventory management
-- Computer allocation
-- Availability tracking
-- Resource organization
-- Computer status management
-
----
-
-## 📅 Lab Scheduling
-
-Organize laboratory sessions and schedules efficiently.
-
-### Features
-
-- Schedule laboratory sessions
-- Manage available time slots
-- Organize lab usage
-- Reduce scheduling conflicts
-- View scheduled activities
-
----
-
-## 🎯 Computer Allocation
-
-Allocate available computers to students or laboratory sessions.
-
-The allocation system helps ensure that laboratory resources are utilized efficiently.
-
-### Benefits
-
-- Better resource utilization
-- Reduced manual allocation
-- Easier computer tracking
-- Improved laboratory organization
-
----
-
-## 📊 Dashboard
-
-A centralized dashboard provides an overview of important laboratory information.
-
-Possible dashboard information includes:
-
-- 👨‍🎓 Total Students
-- 🖥️ Total Computers
-- ✅ Available Computers
-- 📅 Scheduled Sessions
-- 📈 Laboratory activity
-
----
-
-# 🏗️ System Workflow
-
-The general workflow of the system can be represented as:
+### Traditional Approach
 
 ```text
-                    ┌─────────────────────┐
-                    │       Admin         │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │   Student Management│
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │ Computer Management │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │  Lab Scheduling     │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │ Computer Allocation │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │ Monitoring & Reports│
-                    └─────────────────────┘
+Manual Records
+      ↓
+Scattered Information
+      ↓
+Scheduling Conflicts
+      ↓
+Difficulty Finding Available Systems
+      ↓
+Loss of Productive Time
